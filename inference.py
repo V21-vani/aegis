@@ -459,7 +459,7 @@ def main() -> int:
             print(f"[WARN] Task {task_id} not available in environment, skipping.")
             continue
 
-        print(f"\n{'─' * 60}")
+        print(f"\n{'-' * 60}")
         result = run_task(env_client, agent, task_id)
         results.append(result)
         print()
