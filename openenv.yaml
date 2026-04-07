@@ -5,7 +5,7 @@ description: >
   Measures resistance to Indirect Prompt Injections, Honeytoken leakage,
   and Goal Drift. Produces a Betrayal Index for evaluating and training
   safer LLM agents.
-author: "your-hf-username"
+author: "vAnI-21"
 tags:
   - security
   - safety
