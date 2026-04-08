@@ -29,10 +29,10 @@ from openai import OpenAI
 # Configuration
 # ---------------------------------------------------------------------------
 
-API_BASE_URL: str = os.environ.get("API_BASE_URL", "")
-MODEL_NAME: str = os.environ.get("MODEL_NAME", "")
-HF_TOKEN: str = os.environ.get("HF_TOKEN", "")
-AEGIS_ENV_URL: str = os.environ.get("AEGIS_ENV_URL", "http://localhost:7860")
+API_BASE_URL = os.getenv("API_BASE_URL", "https://api-inference.huggingface.co/v1")
+MODEL_NAME = os.getenv("MODEL_NAME", "meta-llama/Llama-3.1-8B-Instruct")
+HF_TOKEN = os.getenv("HF_TOKEN")
+AEGIS_ENV_URL = os.getenv("AEGIS_ENV_URL", "https://vani-21-aegis-red.hf.space")
 
 TASKS: list[str] = [
     "aegis_easy_01", "aegis_medium_01", "aegis_hard_01",
