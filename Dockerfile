@@ -11,7 +11,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY __init__.py .
-COPY models.py .
 COPY environment/ ./environment/
 COPY tasks/ ./tasks/
 COPY server/ ./server/
