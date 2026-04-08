@@ -70,8 +70,8 @@ Formula:
 ## Setup & Usage
 ### Local
 ```bash
-git clone https://github.com/your-org/aegis-red.git
-cd aegis-red
+git clone https://github.com/V21-vani/Aegis.git
+cd Aegis
 pip install -r requirements.txt
 uvicorn environment.env:app --port 7860
 ```
