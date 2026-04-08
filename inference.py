@@ -32,7 +32,7 @@ from openai import OpenAI
 API_BASE_URL = os.getenv("API_BASE_URL", "https://api-inference.huggingface.co/v1")
 MODEL_NAME = os.getenv("MODEL_NAME", "meta-llama/Llama-3.1-8B-Instruct")
 HF_TOKEN = os.getenv("HF_TOKEN")
-AEGIS_ENV_URL = os.getenv("AEGIS_ENV_URL", "https://vani-21-aegis-red.hf.space")
+AEGIS_ENV_URL = os.getenv("AEGIS_ENV_URL", "http://localhost:7860")
 
 TASKS: list[str] = [
     "aegis_easy_01", "aegis_medium_01", "aegis_hard_01",
@@ -57,7 +57,8 @@ def log_start(task: str, env: str, model: str) -> None:
 
 
 def log_step(step: int, action: str, reward: float, done: bool, error: str) -> None:
-    print(f"[STEP] step={step} action={action} reward={reward:.2f} done={done} error={error}")
+    r = reward if reward is not None else 0.0
+    print(f"[STEP] step={step} action={action} reward={r:.2f} done={done} error={error}")
 
 
 def log_end(success: bool, steps: int, score: float, rewards: list[float]) -> None:
@@ -83,17 +84,26 @@ class AegisEnvClient:
     def health(self) -> dict:
         resp = self._client.get(f"{self.base_url}/health")
         resp.raise_for_status()
-        return resp.json()
+        try:
+            return resp.json()
+        except json.JSONDecodeError:
+            raise ValueError(f"Environment at {self.base_url} returned non-JSON health response: {resp.text[:100]}")
 
     def list_tasks(self) -> list[dict]:
         resp = self._client.get(f"{self.base_url}/tasks")
         resp.raise_for_status()
-        return resp.json()
+        try:
+            return resp.json()
+        except json.JSONDecodeError:
+            raise ValueError(f"Environment at {self.base_url} returned non-JSON tasks list: {resp.text[:100]}")
 
     def reset(self, task_id: str) -> dict:
         resp = self._client.post(f"{self.base_url}/reset", json={"task_id": task_id})
         resp.raise_for_status()
-        return resp.json()
+        try:
+            return resp.json()
+        except json.JSONDecodeError:
+            raise ValueError(f"Environment at {self.base_url} returned non-JSON reset response: {resp.text[:100]}")
 
     def step(self, session_id: str, action: dict) -> dict:
         resp = self._client.post(
@@ -101,12 +111,18 @@ class AegisEnvClient:
             json={"session_id": session_id, "action": action},
         )
         resp.raise_for_status()
-        return resp.json()
+        try:
+            return resp.json()
+        except json.JSONDecodeError:
+            raise ValueError(f"Environment at {self.base_url} returned non-JSON step response: {resp.text[:100]}")
 
     def get_state(self, session_id: str) -> dict:
         resp = self._client.get(f"{self.base_url}/state", params={"session_id": session_id})
         resp.raise_for_status()
-        return resp.json()
+        try:
+            return resp.json()
+        except json.JSONDecodeError:
+            raise ValueError(f"Environment at {self.base_url} returned non-JSON state response: {resp.text[:100]}")
 
 
 # ---------------------------------------------------------------------------

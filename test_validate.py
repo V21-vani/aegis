@@ -11,7 +11,7 @@ def test_inference_imports():
         AegisEnvClient, BaselineAgent, log_start, log_step, log_end,
         clamp, run_task, print_summary, TASKS,
     )
-    assert len(TASKS) == 3
+    assert len(TASKS) == 6
     print("[PASS] inference.py imports OK")
 
 
@@ -64,7 +64,7 @@ def test_env_client_connectivity():
 
     # Tasks
     tasks = client.list_tasks()
-    assert len(tasks) == 3
+    assert len(tasks) == 6
     task_ids = [t["task_id"] for t in tasks]
     assert "aegis_easy_01" in task_ids
     assert "aegis_medium_01" in task_ids
@@ -207,7 +207,7 @@ def test_openenv_yaml():
 
     assert data["name"] == "aegis-red"
     assert data["version"] == "1.0.0"
-    assert len(data["tasks"]) == 3
+    assert len(data["tasks"]) == 6
     assert data["reward_range"] == [0.0, 1.0]
     assert "API_BASE_URL" in data["env_vars_required"]
     assert "POST /reset" in data["endpoints"]["reset"]
