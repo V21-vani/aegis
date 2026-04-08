@@ -308,6 +308,21 @@ async def step(req: StepRequest) -> StepResponse:
                 })
                 break
 
+    # ── Tool Interaction Layer (New) ─────────────────────────────────
+    # If the agent called a tool, provide the task-defined response
+    if action.action_type == "call_tool" and not done:
+        tool_name = action.tool_name
+        # Fallback to general tool_output if tool-specific output not found
+        tool_resp = task.get("tool_responses", {}).get(tool_name)
+        if not tool_resp:
+            tool_resp = task.get("default_tool_output", "Tool execution successful.")
+        
+        new_messages.append({
+            "role": "user",  # Using user role for compatibility with most chat templates
+            "content": f"[SYSTEM: Tool '{tool_name}' result]\n{tool_resp}",
+            "turn": current_turn,
+        })
+
     next_observation = EnvironmentObservation(
         turn=current_turn,
         messages=new_messages,
